@@ -6,6 +6,7 @@ import Personal from './components/register/Personal'
 import Contact from './components/register/Contact'
 import Onboard from './components/register/Onboard'
 import Main from './components/main/Index'
+import SignUp from './components/register/SignUp'
 const Stack = createStackNavigator();
 
  function App() {
@@ -14,7 +15,8 @@ const Stack = createStackNavigator();
     headerShown: false
   }}>
     <Stack.Screen  name="Onboard" component={Onboard}/>
-    <Stack.Screen name="Home" component={Personal} />
+    <Stack.Screen name="Login" component={Personal} />
+    <Stack.Screen name="Register" component={SignUp} />
     <Stack.Screen name="Main" component={Main} />
   </Stack.Navigator>
   )

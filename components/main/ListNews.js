@@ -4,8 +4,11 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Caption, Headline, Subheading, Title } from 'react-native-paper'
 import SimpleIcons from 'react-native-vector-icons/SimpleLineIcons'
 
-export default function ListNews() {
+export default function ListNews({playSound}) {
     return (
+        <TouchableOpacity onPress={()=>{
+            playSound()
+        }}>
         <View style={styles.listCont}>
            <Image style={styles.logo}
           source={require('../../assets/nass.png')}></Image>
@@ -15,6 +18,7 @@ export default function ListNews() {
           </View>
        <TouchableOpacity style={styles.optIcon}><SimpleIcons name='options-vertical' size={20} color='black'></SimpleIcons></TouchableOpacity>
         </View>
+        </TouchableOpacity>
     )
 }
 

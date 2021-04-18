@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import { View, Text,PermissionsAndroid,StyleSheet,StatusBar,SafeAreaView,Image} from 'react-native'
 import {Button,Headline}from 'react-native-paper'
+import Onboarding from 'react-native-onboarding-swiper';
 
 
 const requestCameraPermission = async () => {
@@ -25,40 +26,35 @@ const requestCameraPermission = async () => {
     }
   };
 export default function Onboard({navigation}) {
-    useEffect(()=>{
-     requestCameraPermission()
-    },[])
+  const [dynamic,setDyn]=useState('#67d3aa')
     return (
-        <SafeAreaView style={styles.container}>
-        <View>
-            <StatusBar
-             backgroundColor="skyblue"
-             hidden={false} />
-            <Text style={styles.font}>NASS Fm.</Text>
-            <Image
-             style={styles.logo}
-             source={require('../../assets/music.png')}
-           />
-           <Text style={styles.msg}>Programs Scheduled!!</Text>
+     <Onboarding
+     onDone={()=>{navigation.navigate('Register')}}
 
-    <Button style={styles.btn}  
-    color='white' icon="arrow-right-circle"
-    mode="contained" 
-    onPress={() => navigation.replace('Home')}>
-     Get Started
-  </Button>
-        </View>
-        </SafeAreaView>
+     onSkip={()=>{navigation.navigate('Register')}}
+    
+  pages={[
+    {
+      backgroundColor: '#fff',
+      image: <Image source={require('../../assets/tr.png')} />,
+      title: 'Track Your Vehicles',
+      subtitle: `Get to know your vehicle's location with our tracker app`,
+    },
+    {
+      backgroundColor: '#67d3aa',
+      image: <Image source={require('../../assets/mapping.png')} />,
+      title: 'Locate On Map',
+      subtitle: `View all your tracked vehicles on map`,
+    }
+  ]}
+/>
+
+ 
     )
 }
 const styles = StyleSheet.create({
     container: {
-      position: 'relative',
-      display:'flex',
-      alignItems: 'center',
       flex:1,
-      backgroundColor:'skyblue',
-      padding:20
     },
     font:{
         fontSize:30,

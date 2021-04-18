@@ -15,8 +15,8 @@ export default function Personal({navigation}) {
   <View style={styles.cont}>
     <StatusBar  backgroundColor="white" hidden={false}></StatusBar>
     <TouchableOpacity style={styles.btn}><AntDesign name='arrowleft' size={25}></AntDesign></TouchableOpacity>
-    <Title style={styles.par}>Let's sign you in.</Title>
-    <Paragraph style={styles.sub}>Use your credentials to sign in to your account!</Paragraph>
+    <Title style={styles.par}>Sign up</Title>
+    <Paragraph style={styles.sub}>Use your credentials to sign up into Mubs_tracker.!</Paragraph>
     <TextInput
       label="Email Address"
       placeholder='sample@mail.com'
@@ -41,16 +41,16 @@ export default function Personal({navigation}) {
       mode='outlined'
     />
     <View style={styles.messageView}>
-    <Paragraph style={styles.msgPar}>Don't have an account?</Paragraph>
+    <Paragraph style={styles.msgPar}>Have an account?</Paragraph>
     <Button onPress={()=>{
-      navigation.navigate('Register')
-    }} color='black' uppercase={false} compact dark type='text'>Register</Button>
+        navigation.navigate('Login')
+    }} color='black' uppercase={false} compact dark type='text'>Sign In</Button>
    
     </View>
      <Button uppercase={false} style={styles.proceed}  
     color='black' 
     loading={isLoading}
-    icon="arrow-right-circle"
+    icon="account-plus"
     mode="contained" 
     onPress={() =>{
     console.log(name)
@@ -61,7 +61,7 @@ export default function Personal({navigation}) {
     }, 2000);
 
     }}>
-    Sign In
+    Register
   </Button>
   </View>
   </TouchableWithoutFeedback>
