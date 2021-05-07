@@ -1,42 +1,55 @@
-import React,{useState} from 'react';
-import { StyleSheet, Text, View, Button,Image} from 'react-native';
+import React,{useState,useContext} from 'react';
+import { StyleSheet, Text, View, Button,Image,Dimensions} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import AppContext from '../../context/App/appContext'
 import Animated from 'react-native-reanimated';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Antd from 'react-native-vector-icons/AntDesign'
-import { Headline, Paragraph } from 'react-native-paper';
+import { Caption, Headline, Paragraph,Subheading,TouchableRipple,List, Title} from 'react-native-paper';
 
-export default function App({pause,play}) {
+export default function App({animRef}) {
   const [isPlaying,setPlaying]=useState(true)
+  const mobileHeight=Dimensions.get('window').height;
+  const appProps=useContext(AppContext)
   const renderContent = () => (
-      <View   style={styles.container}>
-      <View style={styles.icon}></View>
+      <View   style={[styles.container,{height: mobileHeight}]}>
+      <TouchableOpacity onPress={() => sheetRef.current.snapTo(2)}  style={styles.icon}>
+      <Antd name='arrowdown' size={20} color='white'></Antd>
+      </TouchableOpacity>
       <View style={styles.dash}></View>
-      <View style={styles.details}>
-      <Image style={styles.logo}
-          source={require('../../assets/nass.png')}></Image>
-        <View>
-          <Headline style={{
-            color:'white',
-            marginTop:5,
-            textAlign: 'center',
-          }}>Shirin Safe</Headline>
-          <TouchableOpacity onPress={()=>{
-            isPlaying? (pause(),setPlaying(false)):(play(),setPlaying(true))
-          }} style={{
-            alignSelf: 'center',
-            marginTop:10
+      <Subheading style={{
+        textAlign: 'center'
+      }}>Cars List</Subheading>
+    <View>
+    {/* <TouchableOpacity onPress={()=>{
+      animRef(9.333333,12.500000),sheetRef.current.snapTo(2)
+    }}>
+      <List.Item
+    title="Adamu Ibrahim"
+    description="563t90"
+    left={props => <List.Icon {...props} icon="car-connected" />}
+  />
+      </TouchableOpacity> */}
+      {
+        appProps.cars.length&&(
+         appProps.cars.map((car,ind)=>(
+          <TouchableOpacity key={ind} onPress={()=>{
+            animRef(car.latitude||9.072264+ind,car.longitude||7.491302+ind),sheetRef.current.snapTo(2)
           }}>
-         {isPlaying?( <Antd name='pause' size={25} color='white'></Antd>):( <Antd name='play' size={25} color='white'></Antd>)}
-          </TouchableOpacity>
-        <Text style={{
-          textAlign: 'center',
-          color: 'rgba(255,255,255,0.7)'
-        }}>
-        lkajjhg gaga gafya agajja agajaga avvaffajaaffaj  aggafafaghagtarr
-        </Text>
-        </View>
-      </View>
+            <List.Item
+          title={car.driver||'1st Car'}
+          description={car.plate||'1st car plate number'}
+          left={props => <List.Icon {...props} icon="car-connected" />}
+        />
+            </TouchableOpacity>
+         ))
+        )
+      }
+
+     
+    </View>
+
+    
     </View>
   );
 
@@ -45,25 +58,17 @@ export default function App({pause,play}) {
 
   return (
     <>
-    <TouchableOpacity onPress={() => sheetRef.current.snapTo(0)}>
+    <TouchableRipple  rippleColor="rgba(0, 0, 0, .32)" onPress={() => sheetRef.current.snapTo(0)}>
     <View style={styles.maincon}>
       <View style={styles.iconn}>
-        <Antd name='play' size={20} color='white'></Antd>
+        <Antd name='arrowup' size={20} color='white'></Antd>
       </View>
-      <Text style={{
-        color: 'white',
-        fontSize:14,
-        fontWeight:'bold',
-        marginTop: 'auto',
-        marginBottom: 'auto',
-        marginLeft:20
-      }}>Shirin safe</Text>
       </View>
-    </TouchableOpacity>
+    </TouchableRipple>
       
       <BottomSheet
         ref={sheetRef}
-        snapPoints={[200,0, 0]}
+        snapPoints={['60%','0%', '0%']}
         borderRadius={10}
         renderContent={renderContent}
        
@@ -73,33 +78,38 @@ export default function App({pause,play}) {
 }
 const styles=StyleSheet.create({
 container:{
-  backgroundColor: 'rgba(0,120,170,0.9)',
+  backgroundColor: 'rgba(255,255,255,0.9)',
   padding: 0,
-  height: 200,
+  margin: 10,
+  marginBottom:0,
+  borderRadius: 10
   
   
 },
 icon:{
-       backgroundColor:'#f9f9f9',
-        height:5,
-        width:50,
+       backgroundColor:'rgba(44, 130, 201,0.4)',
+        height:40,
+        width:40,
         marginLeft: 'auto',
         marginRight: 'auto',
-        borderRadius:20,
-        marginTop: 20
+        borderRadius:50,
+        marginTop: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
 },
 dash:{
   width:'100%',
   height:2,
-  backgroundColor: 'rgba(255,255,255,0.2)',
+  backgroundColor: 'rgba(44, 130, 201,0.8)',
   marginTop: 10
   
 },
 maincon:{
-  backgroundColor: 'skyblue',
+  backgroundColor: 'rgba(44, 130, 201,0.8)',
   padding: 5,
   height: 50,
   flexDirection: 'row',
+  justifyContent:'center',
 
 },
 iconn:{

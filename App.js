@@ -9,6 +9,7 @@ import Main from './components/main/Index'
 import SignUp from './components/register/SignUp'
 const Stack = createStackNavigator();
 
+
  function App() {
   return (
    <Stack.Navigator screenOptions={{

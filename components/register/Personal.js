@@ -1,14 +1,34 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect,useContext} from 'react'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import AppContext from '../../context/App/appContext'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import NetInfo from "@react-native-community/netinfo";
 import { View, Text,StyleSheet,StatusBar,TouchableOpacity,Dimensions,TouchableWithoutFeedback,Keyboard} from 'react-native'
-import { Avatar, Button, Card, Title, Paragraph,Headline,TextInput} from 'react-native-paper';
+import { Avatar, Button, Card, Title, Paragraph,Headline,TextInput,Snackbar} from 'react-native-paper';
 const windowHeight = Dimensions.get('window').height;
 export default function Personal({navigation}) {
   const [name,setName]=useState('')
   const [pass,setPass]=useState('')
   const [isLoading,setLoading]=useState(false)
-
+  const appProps=useContext(AppContext)
+  useEffect(()=>{
+    NetInfo.fetch().then(networkState => {
+    if (!networkState.isConnected) {
+      appProps.setMessage('Please connect your phone to the internet!!!')
+    }
+    });
+  },[])
+  const storeData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value)
+      await AsyncStorage.setItem('@storage_Key', jsonValue)
+      console.log('data seted')
+    } catch (e) {
+      console.log('errrorrr')
+    }
+  }
     return (
+    <>
   <TouchableWithoutFeedback onPress={()=>{
     Keyboard.dismiss()
   }} style={styles.cont}>
@@ -53,18 +73,73 @@ export default function Personal({navigation}) {
     icon="arrow-right-circle"
     mode="contained" 
     onPress={() =>{
-    console.log(name)
-    setLoading(true)
-    setTimeout(() => {
-      navigation.navigate('Main'),
-      setLoading(false)
-    }, 2000);
+      const user={
+        email:name,
+        password:pass
+      }
+     let myCars=[]
+      NetInfo.fetch().then(networkState => {
+        if (!networkState.isConnected) {
+         return appProps.setMessage('connect your phone to the internet !!!')
+        }
+        if (networkState.isConnected) {
+          setLoading(true)
+          if (pass==''||name=='') {
+           return alert(`fields can't be empty`),setLoading(false)
+          }
+          fetch(`https://trackerrapp.herokuapp.com/user/${name}`).then(res=>{
+          res.json().then(user=>{
+            // appProps.setMessage(`${user.name} added succesfully`)
+            if (user.password==pass) {
+              const oneOfUserCars=user.cars.legnth?user.cars:[{driver:'Sample',plate:'Sample',longitude:3.406448,latitude:6.465422}]
+              setLoading(false)
+              storeData(user)
+              appProps.setUser(user)
+              appProps.setCar(oneOfUserCars)
+
+            setName('')
+            setPass('')
+              navigation.navigate('Main')
+            }else{
+            setLoading(false)
+           appProps.setMessage('invalid user!!!!')
+           setTimeout(() => {
+            appProps.unsetMessage()
+           }, 3000);
+            }
+            
+          }).catch(err=>{
+            setLoading(false)
+            alert('Please make sure your email is not registered!!!')
+          })
+          })
+          .catch(err=>{
+            alert('Please make sure your email is not registered!!!')
+          })
+        
+         }
+        })
+ 
 
     }}>
     Sign In
   </Button>
   </View>
   </TouchableWithoutFeedback>
+  <Snackbar
+        visible={appProps.snackVisible}
+        onDismiss={()=>{
+          console.log('dis')
+        }}
+        action={{
+          label: 'close',
+          onPress: () => {
+            appProps.unsetMessage()
+          },
+        }}>
+        {appProps.message}
+      </Snackbar>
+  </>
     )
 }
 const styles = StyleSheet.create({

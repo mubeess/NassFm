@@ -1,37 +1,25 @@
 import React,{useState,useEffect} from 'react'
 import { View, Text,PermissionsAndroid,StyleSheet,StatusBar,SafeAreaView,Image} from 'react-native'
 import {Button,Headline}from 'react-native-paper'
+import SplashScreen from 'react-native-splash-screen'
 import Onboarding from 'react-native-onboarding-swiper';
 
 
-const requestCameraPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: "Location permission",
-          message:"The app wants to use yor location ",
-          buttonNeutral: "Ask Me Later",
-          buttonNegative: "Cancel",
-          buttonPositive: "OK"
-        }
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("You can use the camera");
-      } else {
-        console.log("Camera permission denied");
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  };
+
 export default function Onboard({navigation}) {
   const [dynamic,setDyn]=useState('#67d3aa')
+  useEffect(()=>{
+    SplashScreen.hide();
+  },[])
     return (
+      <>
+      <StatusBar  backgroundColor="white" hidden={false}></StatusBar>
      <Onboarding
-     onDone={()=>{navigation.navigate('Register')}}
+     onDone={()=>{navigation.replace('Register')}}
 
-     onSkip={()=>{navigation.navigate('Register')}}
+     onSkip={()=>{navigation.replace('Register')}}
+
+     
     
   pages={[
     {
@@ -41,7 +29,7 @@ export default function Onboard({navigation}) {
       subtitle: `Get to know your vehicle's location with our tracker app`,
     },
     {
-      backgroundColor: '#67d3aa',
+      backgroundColor: 'rgba(44, 130, 201,0.8)',
       image: <Image source={require('../../assets/mapping.png')} />,
       title: 'Locate On Map',
       subtitle: `View all your tracked vehicles on map`,
@@ -49,7 +37,7 @@ export default function Onboard({navigation}) {
   ]}
 />
 
- 
+ </>
     )
 }
 const styles = StyleSheet.create({
